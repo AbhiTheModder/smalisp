@@ -14,5 +14,13 @@ wheels/
 .envrc
 .helix/
 ty.toml
+*.smali
+.ruff_cache/
+
+# Zed
+extensions/zed/grammars/
+*.wasm
+target/
+
 
 smalisp/grammar.yaml

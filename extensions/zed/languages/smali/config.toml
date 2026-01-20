@@ -1,0 +1,5 @@
+name = "Smali"
+grammar = "smali"
+path_suffixes = ["smali"]
+line_comments = ["# "]
+tab_size = 4

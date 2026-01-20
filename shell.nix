@@ -1,8 +1,19 @@
 {
-  pkgs ? import <nixpkgs> { },
+  pkgs ? import <nixpkgs> {
+    overlays = [
+      (import (fetchTarball "https://github.com/oxalica/rust-overlay/archive/master.tar.gz"))
+    ];
+  },
 }:
 
 let
+
+  rustToolchain = pkgs.rust-bin.stable.latest.default.override {
+    extensions = [
+      "rust-src"
+      "rust-analyzer"
+    ];
+  };
 
   # https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/development/python-modules/pygls/default.nix#L66
   pygls = pkgs.python3Packages.buildPythonPackage rec {
@@ -62,7 +73,26 @@ let
 in
 
 pkgs.mkShell {
-  buildInputs = with pkgs; [ uv ];
+  buildInputs = with pkgs; [
+    uv
+    rustToolchain
+    cmake
+    pkg-config
+    openssl
+    dbus
+  ];
+  nativeBuildInputs = with pkgs; [
+    pkg-config
+  ];
+
+  LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (
+    with pkgs;
+    [
+      openssl
+      dbus
+      libgcc
+    ]
+  );
   shellHook = ''
         export PYTHONPATH=${python}/${python.sitePackages}
 
