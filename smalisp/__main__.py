@@ -81,12 +81,18 @@ def hover(ls: LanguageServer, params: types.HoverParams):
     except IndexError:
         return None
 
-    words = line.strip().split()
-    if not words:
+    i = 0
+    while i < len(line) and line[i].isspace():
+        i += 1
+    start = i
+    while i < len(line) and not line[i].isspace():
+        i += 1
+    end = i
+
+    if not (start <= pos.character <= end):
         return None
 
-    instruction_name = words[0].lower()
-
+    instruction_name = line[start:end].lower()
     instruction = INSTRUCTION_LOOKUP.get(instruction_name)
     if not instruction:
         return None
@@ -110,7 +116,7 @@ def hover(ls: LanguageServer, params: types.HoverParams):
     example = instruction.get("example", "")
     example_desc = instruction.get("example_desc", "")
     if example:
-        hover_content.extend(["**Example:**", f"```smali\n{example}\n```", ""])
+        hover_content.extend(["**Example:**", f"```{example}```", ""])
         if example_desc:
             hover_content.extend([f"*{example_desc}*", ""])
 
@@ -124,8 +130,8 @@ def hover(ls: LanguageServer, params: types.HoverParams):
             value="\n".join(hover_content),
         ),
         range=types.Range(
-            start=types.Position(line=pos.line, character=0),
-            end=types.Position(line=pos.line, character=len(line.strip())),
+            start=types.Position(line=pos.line, character=start),
+            end=types.Position(line=pos.line, character=end),
         ),
     )
 
