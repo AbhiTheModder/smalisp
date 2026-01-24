@@ -58,7 +58,7 @@ def initialize(params: types.InitializeParams) -> types.InitializeResult:
     return types.InitializeResult(
         capabilities=types.ServerCapabilities(
             completion_provider=types.CompletionOptions(
-                resolve_provider=False, trigger_characters=[]
+                resolve_provider=False, trigger_characters=[" ", "\t"]
             )
         ),
         server_info=types.ServerInfo(name="smals", version="0.1.0"),
@@ -67,7 +67,43 @@ def initialize(params: types.InitializeParams) -> types.InitializeResult:
 
 @server.feature(types.TEXT_DOCUMENT_COMPLETION)
 def completion(ls: LanguageServer, params: types.CompletionParams):
-    return types.CompletionList(is_incomplete=False, items=INSTRUCTION_COMPLETIONS)
+    document = ls.workspace.get_text_document(params.text_document.uri)
+    line = document.lines[params.position.line]
+    col = params.position.character
+
+    i = 0
+    n = len(line)
+    while i < n and line[i].isspace():
+        i += 1
+    first_start = i
+    while i < n and not line[i].isspace():
+        i += 1
+    first_end = i
+
+    if not (first_start <= col <= first_end):
+        return None
+
+    start = first_start
+    for i in range(col - 1, first_start - 1, -1):
+        if line[i].isspace():
+            start = i + 1
+            break
+
+    current_token = line[start:col]
+
+    if not current_token.strip():
+        return None
+
+    items = [
+        item
+        for item in INSTRUCTION_COMPLETIONS
+        if item.label.lower().startswith(current_token.lower())
+    ]
+
+    if not items:
+        return None
+
+    return types.CompletionList(is_incomplete=False, items=items)
 
 
 @server.feature(types.TEXT_DOCUMENT_HOVER)
