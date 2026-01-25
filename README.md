@@ -61,7 +61,7 @@ Alternatively, run `code --install-extension qbtaumai.smalisp` from the terminal
 ### Helix
 - Prerequisites: Helix installed.
 
-Install/ensure `smalisp` is installed in your Python environment (e.g. `pip install -U smalisp`). Then edit `~/.config/helix/languages.toml` and add the following:
+Install/ensure `smalisp` is installed in your Python environment (e.g. `pip install -U smalisp`). For older Helix versions, edit `~/.config/helix/languages.toml` and add the following:
 
 ```toml
 [language-server.smalisp]
@@ -72,7 +72,7 @@ name = "smali"
 language-servers = [ "smalisp" ]
 ```
 
-- Official integration PR for Helix has been submitted; Smalisp should be available out-of-the-box soon.
+- The PR has been merged and Smalisp is now supported directly by Helix if installed from source or in upcoming Helix versions.
 
 ### Vim/NeoVim
 - Associate smali filetype with file extensions:
