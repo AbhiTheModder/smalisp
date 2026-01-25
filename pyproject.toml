@@ -6,10 +6,10 @@ build-backend = "setuptools.build_meta"
 name = "smalisp"
 version = "0.1.0"
 description = "A very simple language server for smali"
-authors = [{ name = "Abhi" }]
-license = "MIT"
+authors = [{ name = "Abhi", email = "abhi@revengi.in" }]
+license = { file = "LICENSE" }
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.9"
 dependencies = [ "pygls", "PyYAML"]
 classifiers = [
     "Development Status :: 3 - Alpha",
