@@ -1,0 +1,51 @@
+name: Build VSCode Extension
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: extensions/vscode/package-lock.json
+
+      - name: Install dependencies
+        working-directory: extensions/vscode
+        run: npm ci
+
+      - name: Build extension
+        working-directory: extensions/vscode
+        run: npm run package
+
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
+
+      - name: Package VSIX
+        working-directory: extensions/vscode
+        run: vsce package --no-dependencies
+
+      - name: Get version from package.json
+        id: version
+        working-directory: extensions/vscode
+        run: echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
+
+      - name: Upload VSIX to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: extensions/vscode/*.vsix
+          name: Release v${{ steps.version.outputs.version }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
