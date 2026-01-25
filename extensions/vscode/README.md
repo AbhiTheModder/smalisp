@@ -1,3 +1,1 @@
-# smalisp vscode
-
-Smali language support for vscode
+../../README.md
