@@ -20,18 +20,22 @@ pip install -U git+https://github.com/AbhiTheModder/smalisp.git
 
 ## Extensions & Setup
 
-### Zed Extension (Local Development)
+### Zed Extension
 Prerequisites: Zed editor installed.
 
 - Extension path: `extensions/zed`.
 
+**Option 1: Install from Zed Extensions**
 1. Open the Extensions page in Zed.
-2. Click the Install Dev Extension button (or run the `zed: Install Dev Extension` command).
+2. Search for "smalisp".
+3. Click Install.
+
+**Option 2: Local Development**
+1. Open the Extensions page in Zed.
+2. Click the "**Install Dev Extension**" button (or run the `zed: Install Dev Extension` command).
 3. Select the directory containing your Zed extension (the folder that contains the manifest and source).
 
 Reference: https://zed.dev/docs/extensions/developing-extensions#developing-an-extension-locally
-
-Note: These dev extensions are not yet officially accepted in the Zed extension registry; acceptance is expected soon.
 
 ### VSCode Extension
 Prerequisites: VSCode installed.
